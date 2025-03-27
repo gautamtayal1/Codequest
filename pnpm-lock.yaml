@@ -34,6 +34,15 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  apps/boilerplate-generator:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^22.13.10
+        version: 22.13.10
+
   apps/web:
     dependencies:
       '@prisma/client':
