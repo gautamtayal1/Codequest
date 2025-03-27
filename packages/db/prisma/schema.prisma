@@ -14,9 +14,89 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id          String       @id @default(uuid())
+  email       String       @unique
+  name        String?
+  role        Role         @default(USER)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  submissions Submission[]
+}
+
+model Problem {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  slug        String   @unique
+  solved      Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  submissions Submission[]
+  defaultCode DefaultCode[]
+}
+
+model Submission {
+  id         String           @id @default(cuid())
+  problemId  String
+  userId     String
+  langaugeId Int
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  code       String
+  fullCode   String
+  problem Problem @relation(fields: [problemId], references: [id])
+  status     SubmissionResult @default(PENDING)
+  testCases  TestCase[]
+  user       User             @relation(fields: [userId], references: [id])
+}
+
+model Language {
+  id        Int      @id @default(autoincrement())
+  name      String
+  judge0Id  Int      @unique
+  defaultCode DefaultCode[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model TestCase {
+  id               String         @id @default(cuid())
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  status           TestCaseResult @default(PENDING)
+  judge0TrackingId String         @unique
+  submissionId     String
+  submission       Submission     @relation(fields: [submissionId], references: [id])
+}
+
+model DefaultCode {
+  id String @id @default(cuid())
+  languageId Int
+  problemId String
+  code String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  language Language @relation(fields: [languageId], references: [id])
+  problem Problem @relation(fields: [problemId], references: [id])
+
+  @@unique([languageId, problemId])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum SubmissionResult {
+  AC
+  REJECTED
+  PENDING
+}
+
+enum TestCaseResult {
+  AC
+  FAIL
+  TLE //TIME LIMIT EXCEEDED
+  PENDING
+  COMPILATION_ERROR
+}
