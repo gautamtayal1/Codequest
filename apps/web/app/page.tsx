@@ -63,9 +63,7 @@ function App() {
           style={{ animationDelay: '1.5s' }}
         />
       </svg>
-
- 
-
+      
       {/* Hero Section */}
       <div className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-7xl mx-auto">

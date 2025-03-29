@@ -3,30 +3,8 @@
 import { signIn, signOut, useSession } from "next-auth/react"
 import { Button } from "./ui/button"
 
-
-// export const Navbar = () => {
-//   
-
-//   return (
-//     <div className="flex justify-between items-center p-3 bg-[#282a36] text-white">
-//       <h1 className="">LOGO</h1>
-//       <div>
-//         {session?.user 
-//         ? 
-//         <div className="flex items-center gap-3">
-//           <p>Welcome, {session?.user?.name}</p>
-//           <Button onClick={() => {signOut()}}>Logout</Button>
-//         </div>
-          
-//         :
-//           <Button onClick={() => {signIn()}}>Login</Button>}
-//       </div>
-//     </div>
-//   )
-// }
-
 import React from 'react';
-import { Code2, Terminal, Cpu, Network, Lock, User, LogOut } from 'lucide-react';
+import { Code2, Terminal, Cpu, Network, User} from 'lucide-react';
 
 export const Navbar = () => {
   const {data: session} = useSession()
@@ -38,7 +16,7 @@ export const Navbar = () => {
             <div className="relative">
               <Code2 className="h-8 w-8 text-indigo-400 glow-effect" />
               <div className="absolute -inset-1 bg-indigo-500 opacity-20 rounded-full blur-sm"></div>
-              {/* Animated circuit connection */}
+
               <div className="absolute h-px w-16 bg-gradient-to-r from-indigo-500 to-transparent -right-16 top-1/2 circuit-line"></div>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
@@ -74,14 +52,14 @@ export const Navbar = () => {
             </div>
             }
               
-            <button className="bg-gray-800/50  rounded-lg hover:bg-gray-700/50 transition border border-indigo-500/20 group">
-          
             {session?.user 
               ?
-                <Button onClick={() => {signOut()}}>Logout</Button>
+                <Button onClick={() => {signOut()}}
+                className="bg-gray-800/50  rounded-lg hover:bg-gray-700/50 transition border border-indigo-500/20 group">Logout</Button>
               :
-                <Button onClick={() => {signIn()}}>Login</Button>}
-            </button>
+                <Button onClick={() => {signIn()}}
+                className="bg-gray-800/50  rounded-lg hover:bg-gray-700/50 transition border border-indigo-500/20 group">Login</Button>}
+       
           </div>
         </div>
       </div>
