@@ -35,7 +35,7 @@ model Submission {
   id               String           @id @default(cuid())
   problemId        String
   userId           String
-  langaugeId       LangaugeId
+  languageId       Int
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
   code             String
@@ -47,6 +47,7 @@ model Submission {
   contest          Contest[]
   contestProblem   ContestProblem?  @relation(fields: [contestProblemId], references: [id])
   contestProblemId String?
+  language         Language @relation(fields: [languageId], references: [id])
 }
 
 model Language {
@@ -54,6 +55,7 @@ model Language {
   name        String
   judge0Id    Int           @unique
   defaultCode DefaultCode[]
+  submissions Submission[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 }
@@ -144,9 +146,4 @@ enum ContestVisibility {
   PUBLIC
   PRIVATE
   HIDDEN
-}
-
-enum LangaugeId {
-  js
-  cpp
 }

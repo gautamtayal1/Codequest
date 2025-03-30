@@ -26,7 +26,7 @@ export async function getProblems(slug: string, languageId: string) {
   }
 }
 
-async function getInputs(slug: string) : Promise<String[]> {
+async function getInputs(slug: string) : Promise<string[]> {
   const path = `../../../problems/${slug}/tests/inputs`
   const inputsFolder = fs.readdir(path)
   const inputs = await Promise.all((await inputsFolder).map(async(file) => {
@@ -35,7 +35,7 @@ async function getInputs(slug: string) : Promise<String[]> {
   return inputs
 }
 
-async function getOutputs(slug: string) : Promise<String[]> {
+async function getOutputs(slug: string) : Promise<string[]> {
   const path = `../../../problems/${slug}/tests/outputs`
   const outputsFolder = fs.readdir(path)
   const outputs = await Promise.all((await outputsFolder).map(async(file) => {
