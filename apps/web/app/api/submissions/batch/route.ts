@@ -5,7 +5,7 @@ import prisma from "@repo/db/config"
 
 export async function POST(request: Request) {
   try {
-    const {user} = await getUserSession()
+    const { user } = await getUserSession()
     const {problem_id, language_id, code, contest_id, contest_problem_id} = await request.json()
 
     const problem = await prisma.problem.findUnique({
@@ -59,7 +59,14 @@ export async function POST(request: Request) {
         where: {id: contest_id}
       })
       if(contest) {
-        submissionData.contestId = 
+        submissionData.contestId = contest_id
+        if(contest_id && problem_id) {
+          const contestProblem = await prisma.contestProblem.findUnique({
+            where: {
+              contestId_problemId
+            }
+          })
+        }
       }
     } 
 

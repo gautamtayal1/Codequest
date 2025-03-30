@@ -31,12 +31,19 @@ async function generateJSBoilerplate(functionName: string, inputTypes: string[],
   const boilerplateDir = path.resolve(basePath, "full-boilerplate");
   await fs.mkdir(boilerplateDir, { recursive: true });
 
-  const paramList = inputTypes.map((_, i) => `param${i}`).join(", ");
-  
-  const jsCode = `function ${functionName}(${paramList}) {
-  // Your code here
-  return ${outputName};
-}`;
+  const inputReadCode = inputTypes.map((type, index) => {
+    if (type === "int") {
+      return `const param${index} = parseInt(input.shift());`;
+    } else if (type === "int[]") {
+      return `const size_param${index} = parseInt(input.shift());\nconst param${index} = input.splice(0, size_param${index}).map(Number);`;
+    } else {
+      return `const param${index} = input.shift();`;
+    }
+  }).join("\n");
+
+  const jsCode = `// ##USER_CODE_HERE##\n\nconst input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split('\\n').join(' ').split(' ');
+${inputReadCode}\nconst result = ${functionName}(${inputTypes.map((_, i) => `param${i}`).join(", ")});\nconsole.log(result);`;
+
   await fs.writeFile(path.resolve(boilerplateDir, "function.js"), jsCode);
 }
 
@@ -45,15 +52,10 @@ async function generateCppBoilerplate(functionName: string, inputTypes: string[]
   await fs.mkdir(boilerplateDir, { recursive: true });
 
   const paramList = inputTypes.map((type, i) => `${type} param${i}`).join(", ");
+  const cppCode = `#include <iostream>\n#include <vector>\n#include <string>\n\n// ##USER_CODE_HERE##\n\nint main() {\n  int size_arr; std::cin >> size_arr;\n  std::vector<int> arr(size_arr);\n  for(int i = 0; i < size_arr; i++) std::cin >> arr[i];\n\n  int size_arr2; std::cin >> size_arr2;\n  std::vector<int> arr2(size_arr2);\n  for(int i = 0; i < size_arr2; i++) std::cin >> arr2[i];\n\n  int result = ${functionName}(arr, arr2);\n  std::cout << result << std::endl;\n  return 0;\n}`;
 
-  const cppCode = `${outputType} ${functionName}(${paramList}) {
-  // Your code here
-  return ${outputName};
-}`;
   await fs.writeFile(path.resolve(boilerplateDir, "function.cpp"), cppCode);
 }
-
-// Generate for All Problems
 
 export default async function generateFullBoilerplate() {
   const problemsDir = path.resolve(process.cwd(), "../problems");
