@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       code
     )
 
-    const reponse = await axios.post(
+    const response = await axios.post(
       `${process.env.NEXT_PUBLIC_JUDGE0_SERVER}/submissions/batch?base64_encoded=false`, {
         submissions: problem.inputs.map((input, index) => ({
           languageId: LANGUAGE_MAPPING[languageId]?.judge0,
@@ -66,8 +66,18 @@ export async function POST(req: NextRequest) {
       }
     })
 
-
-
+    const testCase = await Promise.all(
+      response.data.map(async(SubmissionResult: any) => {
+        const testCase = await prisma.testCase.create({
+          data: {
+            judge0TrackingId: SubmissionResult.token,
+            submissionId: submission.id,
+          }
+        })
+        return testCase
+      })
+    )
+    return NextResponse.json({testCases: testCase, submissions: submission})
 
   } catch (error) {
     console.log(error)

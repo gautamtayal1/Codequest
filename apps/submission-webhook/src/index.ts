@@ -4,7 +4,8 @@ import express from "express";
 const app = express();
 app.use(express.json())
 
-app.put("/submission-callback", async (req, res) => {
+//@ts-ignore
+app.put("/submission-callback", async (req: express.Request, res: express.Response) => {
   const data = req.body;
 
   const testCase = await prisma.testCase.update({
@@ -30,7 +31,7 @@ app.put("/submission-callback", async (req, res) => {
 
   if(pendingTestCases.length === 0) {
     const accepted = failedTestCases.length === 0
-    const response = await prisma.submission.update({
+    await prisma.submission.update({
       where: {
         id: testCase.submissionId,
       },
@@ -42,6 +43,7 @@ app.put("/submission-callback", async (req, res) => {
       }
     })
   }
+  return res.status(200).json({ success: true });
 })
 
 app.listen(3000, () => {
