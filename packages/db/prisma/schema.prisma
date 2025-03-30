@@ -138,8 +138,9 @@ enum TestCaseResult {
   AC
   FAIL
   TLE //TIME LIMIT EXCEEDED
+  MLE
   PENDING
-  COMPILATION_ERROR
+  COMPILE_ERROR
 }
 
 enum ContestVisibility {
