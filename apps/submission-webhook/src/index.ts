@@ -46,8 +46,8 @@ app.put("/submission-callback", async (req: express.Request, res: express.Respon
   return res.status(200).json({ success: true });
 })
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(8080, () => {
+  console.log("Server is running on port 8080");
 });
 
 function getStatus(status: string) {

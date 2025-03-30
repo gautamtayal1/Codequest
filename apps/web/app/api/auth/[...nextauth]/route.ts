@@ -2,7 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "@repo/db/config"
 
-const authOption: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
@@ -12,7 +12,24 @@ const authOption: NextAuthOptions = {
   session: {
     strategy: "jwt"
   },
+  jwt: {
+    secret: process.env.NEXTAUTH_SECRET,
+  },
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        //@ts-ignore
+        session.user.id = token.id;
+      }
+      return session;
+    },  
+
     async signIn({account, profile}) {
       if(!profile?.email) {
         throw new Error('no profile')
@@ -36,5 +53,5 @@ const authOption: NextAuthOptions = {
   }
 }
 
-const handler = NextAuth(authOption)
+const handler = NextAuth(authOptions)
 export { handler as GET, handler as POST }

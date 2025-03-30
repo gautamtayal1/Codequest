@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     const {activeContestId, code, languageId, problemId} = await req.json()
     const user = await getUserSession()
     if(!user) {
-      return NextResponse.json({messsage: "please login to continue"}, 
+      return NextResponse.json({message: "please login to continue"}, 
       {status: 401})
     }
 
@@ -30,6 +30,8 @@ export async function POST(req: NextRequest) {
     })
     if (!dbProblem) {
       return NextResponse.json({message: 'problem not found'}, {status:404})
+    } else {
+      console.log("check1")
     }
 
     const problem = await getProblems(
@@ -37,6 +39,7 @@ export async function POST(req: NextRequest) {
       languageId
     )
     
+    console.log("check2")
     const fullBoilerplateBuffer = await problem.fullBoilerplateCode
     const fullBoilerplateString = fullBoilerplateBuffer.toString()
     const updatedCode = fullBoilerplateString.replace(
@@ -55,6 +58,7 @@ export async function POST(req: NextRequest) {
         }))
       }
     )
+    console.log("check3")
 
     const submission = await prisma.submission.create({
       data: {
@@ -65,7 +69,7 @@ export async function POST(req: NextRequest) {
         fullCode: updatedCode,
       }
     })
-
+    console.log("check4")
     const testCase = await Promise.all(
       response.data.map(async(SubmissionResult: any) => {
         const testCase = await prisma.testCase.create({
