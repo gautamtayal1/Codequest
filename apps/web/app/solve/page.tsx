@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Play, CheckCircle2, Clock, ChevronDown, MessageSquare, Settings2, Share2 } from 'lucide-react';
+import MonacoEditor from '@/components/MonacoEditor';
 
 interface TestCase {
   input: string;
@@ -164,8 +165,8 @@ Return the minimum number of operations needed to synchronize all nodes.`,
 
           {/* Editor Container - Will be replaced with Monaco */}
           <div className="bg-gray-900/40 backdrop-blur-xl rounded-xl border border-indigo-500/20 h-[600px] relative">
-            <div className="absolute inset-0 flex items-center justify-center text-gray-500">
-              Monaco Editor will be integrated here
+            <div className="absolute inset-0 flex items-center justify-center text-gray-500" >
+              <MonacoEditor />
             </div>
           </div>
 

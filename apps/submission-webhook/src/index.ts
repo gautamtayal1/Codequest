@@ -5,8 +5,9 @@ const app = express();
 app.use(express.json())
 
 //@ts-ignore
-app.put("/submission-callback", async (req: express.Request, res: express.Response) => {
-  const data = req.body;
+app.post("/submission-callback", async (req: express.Request, res: express.Response) => {
+  try {
+    const data = req.body;
 
   const testCase = await prisma.testCase.update({
     where: {
@@ -42,8 +43,12 @@ app.put("/submission-callback", async (req: express.Request, res: express.Respon
         problem: true
       }
     })
+    }
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ success: false });
   }
-  return res.status(200).json({ success: true });
 })
 
 app.listen(8080, () => {
