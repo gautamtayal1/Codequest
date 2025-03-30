@@ -1,7 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "globalEnv": ["JUDGE0_CALLBACK_URL", "NEXT_PUBLIC_JUDGE0_SERVER"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -16,8 +15,7 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true,
-      "env": ["JUDGE0_CALLBACK_URL", "NEXT_PUBLIC_JUDGE0_SERVER"]
+      "persistent": true
     }
   }
 }

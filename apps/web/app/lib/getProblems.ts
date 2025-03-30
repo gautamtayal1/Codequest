@@ -11,10 +11,10 @@ export const LANGUAGE_MAPPING : {
   js: {judge0: 63, internal: 1, name: "Javascript", monaco: "javascript"},
   cpp: {judge0: 54, internal: 2, name: "C++", monaco: "cpp"}
 }
+const basePath = `/Users/apple/Desktop/my_projects/leetcode/apps`
 
 export async function getProblems(slug: string, languageId: string) {
-  const path = "../../../problems"
-  const fullBoilerplateCode = fs.readFile(`${path}/${slug}/full-boilerplate/function${languageId}`)
+  const fullBoilerplateCode = fs.readFile(`${basePath}/problems/${slug}/full-boilerplate/function.${languageId}`)
 
   const inputs = await getInputs(slug)
   const outputs = await getOutputs(slug)
@@ -27,7 +27,7 @@ export async function getProblems(slug: string, languageId: string) {
 }
 
 async function getInputs(slug: string) : Promise<string[]> {
-  const path = `../../../problems/${slug}/tests/inputs`
+  const path = `${basePath}/problems/${slug}/tests/inputs`
   const inputsFolder = fs.readdir(path)
   const inputs = await Promise.all((await inputsFolder).map(async(file) => {
     return await fs.readFile(`${path}/${file}`, "utf-8")
@@ -36,7 +36,7 @@ async function getInputs(slug: string) : Promise<string[]> {
 }
 
 async function getOutputs(slug: string) : Promise<string[]> {
-  const path = `../../../problems/${slug}/tests/outputs`
+  const path = `${basePath}/problems/${slug}/tests/outputs`
   const outputsFolder = fs.readdir(path)
   const outputs = await Promise.all((await outputsFolder).map(async(file) => {
     return await fs.readFile(`${path}/${file}`, "utf-8")

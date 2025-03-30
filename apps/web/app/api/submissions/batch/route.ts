@@ -20,11 +20,20 @@ export async function POST(req: NextRequest) {
   try {
     const {activeContestId, code, languageId, problemId} = await req.json()
     const user = await getUserSession()
+    console.log(user)
     if(!user) {
       return NextResponse.json({message: "please login to continue"}, 
       {status: 401})
     }
 
+
+    const dbUser = await prisma.user.findUnique({
+      where: { email: user.email ?? "" }
+    });
+
+    if (!dbUser) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
     const dbProblem = await prisma.problem.findUnique({
       where: {id: problemId}
     })
@@ -48,9 +57,9 @@ export async function POST(req: NextRequest) {
     )
 
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_JUDGE0_SERVER}/submissions/batch?base64_encoded=false`, {
+      `${process.env.NEXT_PUBLIC_JUDGE0_SERVER}/submissions/batch`, {
         submissions: problem.inputs.map((input, index) => ({
-          languageId: LANGUAGE_MAPPING[languageId]?.judge0,
+          language_id: LANGUAGE_MAPPING[languageId]?.judge0,
           source_code: updatedCode,
           stdin: input,
           expected_output: problem.outputs[index],
@@ -62,7 +71,7 @@ export async function POST(req: NextRequest) {
 
     const submission = await prisma.submission.create({
       data: {
-        userId: user.id,
+        userId: dbUser.id,
         problemId: problemId,
         languageId: LANGUAGE_MAPPING[languageId] ? LANGUAGE_MAPPING[languageId].internal : 1,
         code: code,
