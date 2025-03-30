@@ -15,7 +15,8 @@ export const LANGUAGE_MAPPING : {
 
 
 async function main(problemSlug: string, problemTitle: string) {
-  const problemStatement = await fs.readFile(`../../../apps/problems/${problemSlug}/Problem.md`, "utf8")
+  const absolutePath = `/Users/apple/Desktop/my_projects/leetcode/apps/problems/${problemSlug}`
+  const problemStatement = await fs.readFile(`${absolutePath}//Problem.md`, "utf8")
 
   const problem = await prisma.problem.upsert({
     where: { slug: problemSlug },
@@ -31,13 +32,13 @@ async function main(problemSlug: string, problemTitle: string) {
 
   await Promise.all(
     Object.keys(LANGUAGE_MAPPING).map(async(language) => {
-      const code = await fs.readFile(`../../../apps/problems/${problemSlug}/boilerplate/function.${language}`, "utf8")
+      const code = await fs.readFile(`${absolutePath}/boilerplate/function.${language}`, "utf8")
 
       await prisma.defaultCode.upsert({
         where: {
-          problemId_languageId: {
-            problemId: problem.id,
-            languageId: LANGUAGE_MAPPING[language]?.internal
+          languageId_problemId: {
+            languageId: LANGUAGE_MAPPING[language]?.internal,
+            problemId: problem.id
           }
         },
         create: {
