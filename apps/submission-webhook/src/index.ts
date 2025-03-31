@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json())
 
 //@ts-ignore
-app.post("/submission-callback", async (req: express.Request, res: express.Response) => {
+app.put("/submission-callback", async (req: express.Request, res: express.Response) => {
   console.log("submission-callback executed")
   try {
     const data = req.body;

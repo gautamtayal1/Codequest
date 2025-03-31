@@ -18,7 +18,6 @@ RUN pnpm prisma generate
 
 WORKDIR /app/apps/submission-webhook
 
-# Expose port (if your app runs on a specific port, e.g., 3000 for Express)
 EXPOSE 8080
 
 # Command to run the application
