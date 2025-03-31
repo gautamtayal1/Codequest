@@ -20,4 +20,4 @@ RUN pnpm install
 EXPOSE 8080
 
 # Command to run the application
-CMD ["pnpm", "start"]
+CMD ["pnpm", "dev"]
