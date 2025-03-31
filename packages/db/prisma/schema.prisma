@@ -15,7 +15,6 @@ model User {
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
   submissions          Submission[]
-  contestParticipation ContestParticipation[]
 }
 
 model Problem {
@@ -28,7 +27,6 @@ model Problem {
   updatedAt   DateTime         @updatedAt
   submissions Submission[]
   defaultCode DefaultCode[]
-  contest     ContestProblem[]
 }
 
 model Submission {
@@ -44,9 +42,6 @@ model Submission {
   status           SubmissionResult @default(PENDING)
   testCases        TestCase[]
   user             User             @relation(fields: [userId], references: [id])
-  contest          Contest[]
-  contestProblem   ContestProblem?  @relation(fields: [contestProblemId], references: [id])
-  contestProblemId String?
   language         Language @relation(fields: [languageId], references: [id])
 }
 
@@ -83,45 +78,7 @@ model DefaultCode {
   @@unique([languageId, problemId])
 }
 
-model Contest {
-  id              String                 @id @default(cuid())
-  name            String
-  description     String?
-  startDate       DateTime
-  endDate         DateTime
-  duration        Int
-  visibility      ContestVisibility      @default(PUBLIC)
-  createdAt       DateTime               @default(now())
-  updatedAt       DateTime               @updatedAt
-  submissions     Submission[]
-  contestProblems ContestProblem[]
-  participants    ContestParticipation[]
-}
 
-model ContestProblem {
-  id           String       @id @default(cuid())
-  points       String
-  problem      Problem      @relation(fields: [problemId], references: [id])
-  problemId    String
-  contest      Contest      @relation(fields: [contestId], references: [id])
-  contestId    String
-  submissions  Submission[]
-  displayOrder Int
-
-  @@unique([contestId, problemId])
-}
-
-model ContestParticipation {
-  id        String  @id @default(cuid())
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
-  contest   Contest @relation(fields: [contestId], references: [id])
-  contestId String
-  score     Int
-  rank      Int
-
-  @@unique([userId, contestId])
-}
 
 enum Role {
   USER
@@ -141,10 +98,4 @@ enum TestCaseResult {
   MLE
   PENDING
   COMPILE_ERROR
-}
-
-enum ContestVisibility {
-  PUBLIC
-  PRIVATE
-  HIDDEN
 }

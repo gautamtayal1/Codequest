@@ -1,13 +1,35 @@
 "use client"
 
+import { Problem } from "@prisma/client";
 import { CheckCircle2, MessageSquare } from "lucide-react";
 import MonacoEditor from "./MonacoEditor";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import axios from "axios";
 
 
-export default function RightPanel({problem}) {
+export default function RightPanel({problem}: {problem: Problem}) {
   const [language, setLanguage] = useState("Javascript")
   console.log(problem)
+  const editorRef = useRef<any>(null)
+
+  const handleSubmit = () => {
+    const code = editorRef.current?.getCode()
+    console.log("Submitted Code:", code);
+    submitRequest(code)
+  }
+
+  const submitRequest = async(code: string) => {
+    try {
+      const req = await axios.post(`/api/submissions/batch`, {
+        code: code,
+        languageId: language === "Javascript" ? "js" : "cpp",
+        problemId: problem.id
+      })
+      console.log(req)
+    } catch (error) {
+      console.error("Error submitting code:", error)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -28,7 +50,8 @@ export default function RightPanel({problem}) {
           <div className="bg-gray-900/40 backdrop-blur-xl rounded-xl border border-indigo-500/20 h-[600px] relative">
             <div className="absolute inset-0 flex items-center justify-center text-gray-500" >
             <MonacoEditor 
-              defaultCode={language === "Javascript" ? problem?.defaultCode?.[1]?.code : problem?.defaultCode?.[0]?.code}
+            ref={editorRef}
+              defaultCode={language === "Javascript" ? problem?.defaultCode?.[1]?.code : problem?.defaultCode?.[0].code}
               language={language === "Javascript" ? "javascript" : "cpp"} 
             />
             </div>
@@ -38,7 +61,8 @@ export default function RightPanel({problem}) {
           <div className="bg-gray-900/40 backdrop-blur-xl rounded-xl border border-indigo-500/20 p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <button className="flex items-center space-x-2 px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                <button className="flex items-center space-x-2 px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                onClick={handleSubmit}>
                   <CheckCircle2 className="w-4 h-4" />
                   <span>Submit</span>
                 </button>

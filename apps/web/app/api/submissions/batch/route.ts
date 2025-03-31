@@ -18,7 +18,7 @@ export const LANGUAGE_MAPPING : {
 
 export async function POST(req: NextRequest) {
   try {
-    const {activeContestId, code, languageId, problemId} = await req.json()
+    const {code, languageId, problemId} = await req.json()
     const user = await getUserSession()
     console.log(user)
     if(!user) {
@@ -42,12 +42,12 @@ export async function POST(req: NextRequest) {
     } else {
       console.log("check1")
     }
-
+    console.log(dbProblem.slug)
     const problem = await getProblems(
       dbProblem.slug,
       languageId
     )
-    
+    console.log(problem)
     console.log("check2")
     const fullBoilerplateBuffer = await problem.fullBoilerplateCode
     const fullBoilerplateString = fullBoilerplateBuffer.toString()
@@ -55,6 +55,8 @@ export async function POST(req: NextRequest) {
       "// ##USER_CODE_HERE##",
       code
     )
+
+    console.log(updatedCode)
 
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_JUDGE0_SERVER}/submissions/batch`, {

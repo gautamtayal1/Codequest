@@ -1,13 +1,19 @@
 "use client"
 
-import React from "react"
+import React, { forwardRef, useImperativeHandle, useRef } from "react"
 import Editor from "@monaco-editor/react"
 
-export default function MonacoEditor({
-  defaultCode, language}: 
-  {
-  defaultCode: string, language: string
-}) {
+interface MonacoEditorProps {
+  defaultCode: string;
+  language: string;
+}
+
+const MonacoEditor = forwardRef(({ defaultCode, language }: MonacoEditorProps, ref) => {
+  const editorRef = useRef<any>(null)
+
+  useImperativeHandle(ref, () => ({
+    getCode: () => editorRef.current?.getValue() || '',
+  }));
 
   return (
     <Editor
@@ -15,6 +21,7 @@ export default function MonacoEditor({
   width="99%"
   language={language}
   theme='vs-dark'
+  onMount={(editor) => (editorRef.current = editor)} 
   value={defaultCode}
   options={{
     fontSize: 16, 
@@ -48,4 +55,10 @@ export default function MonacoEditor({
 />
 
   )
-}
+})
+
+MonacoEditor.displayName = 'MonacoEditor';
+
+export default MonacoEditor;
+
+

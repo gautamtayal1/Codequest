@@ -6,14 +6,13 @@ import remarkGfm from 'remark-gfm';
 import RightPanel from '@/components/RightPanel';
 
 export default async function ProblemSolving({params}: {params: {id: string}}) {
-  
+  const id = await params.id
   const problem = await prisma.problem.findUnique({
-    where: {id: params.id},
+    where: {id},
     include: {
       defaultCode: true
       }
   })
-
   const defaultCode = problem?.defaultCode[0]?.code || '// Write your code here'
 
   return (
