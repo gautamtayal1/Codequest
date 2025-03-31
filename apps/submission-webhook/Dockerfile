@@ -10,13 +10,14 @@ RUN npm install -g pnpm
 # Copy the entire monorepo (from the root) to the container
 COPY . .
 
-# Navigate to the submission-webhook directory and install dependencies
-WORKDIR /app/apps/submission-webhook
-
 # Install dependencies using pnpm
 RUN pnpm install
 
-RUN pnpm exec prisma generate
+WORKDIR /packages/db
+RUN pnpm prisma generate
+
+WORKDIR /app/apps/submission-webhook
+
 # Expose port (if your app runs on a specific port, e.g., 3000 for Express)
 EXPOSE 8080
 
