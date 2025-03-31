@@ -1,16 +1,26 @@
+# Use Node.js 20 Alpine as base image
 FROM node:20-alpine
 
-WORKDIR /src
+# Set working directory
+WORKDIR /app
 
+# Install pnpm globally
 RUN npm install -g pnpm
 
-COPY ../../pnpm-lock.yaml ./pnpm-lock.yaml 
-COPY ./package.json ./
-
-RUN pnpm install --frozen-lockfile
-
+# Copy the entire monorepo (from the root) to the container
 COPY . .
 
-EXPOSE 8080
+# Navigate to the submission-webhook directory and install dependencies
+WORKDIR /app/apps/submission-webhook
 
-CMD [ "pnpm", "run", "dev" ]
+# Install dependencies using pnpm
+RUN pnpm install
+
+# Build the project (if necessary)
+RUN pnpm run build
+
+# Expose port (if your app runs on a specific port, e.g., 3000 for Express)
+EXPOSE 3000
+
+# Command to run the application
+CMD ["pnpm", "start"]
