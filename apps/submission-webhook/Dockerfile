@@ -16,6 +16,7 @@ WORKDIR /app/apps/submission-webhook
 # Install dependencies using pnpm
 RUN pnpm install
 
+RUN pnpm exec prisma generate
 # Expose port (if your app runs on a specific port, e.g., 3000 for Express)
 EXPOSE 8080
 
