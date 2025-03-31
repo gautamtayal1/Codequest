@@ -13,7 +13,7 @@ COPY . .
 # Install dependencies using pnpm
 RUN pnpm install
 
-WORKDIR /packages/db
+WORKDIR /app/packages/db
 RUN pnpm prisma generate
 
 WORKDIR /app/apps/submission-webhook
