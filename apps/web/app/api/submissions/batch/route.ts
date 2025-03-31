@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
           source_code: updatedCode,
           stdin: input,
           expected_output: problem.outputs[index],
-          callback_url: process.env.JUDGE0_CALLBACK_URL ?? "http://51.21.161.154:2358/submission-callback"
+          callback_url: process.env.JUDGE0_CALLBACK_URL ?? "http://51.20.54.109:8080/submission-callback"
         }))
       }
     )
