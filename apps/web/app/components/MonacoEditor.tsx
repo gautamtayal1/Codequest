@@ -3,15 +3,19 @@
 import React from "react"
 import Editor from "@monaco-editor/react"
 
-export default function MonacoEditor() {
+export default function MonacoEditor({
+  defaultCode, language}: 
+  {
+  defaultCode: string, language: string
+}) {
+
   return (
     <Editor
   height="99%"
   width="99%"
-  language='JavaScript'
+  language={language}
   theme='vs-dark'
-  // defaultValue={defaultValue}
-  // onChange={handleEditorChange}
+  value={defaultCode}
   options={{
     fontSize: 16, 
     minimap: { enabled: false }, 
