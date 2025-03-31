@@ -1,68 +1,25 @@
-"use client"
+import React from 'react';
+import { Star, BarChart2, Clock, CheckCircle2, AlertCircle, Lock } from 'lucide-react';
+import prisma from '@repo/db/config';
+import Link from 'next/link';
 
-import React, { useState } from 'react';
-import { Search, Filter, Star, BarChart2, Clock, CheckCircle2, AlertCircle, Lock } from 'lucide-react';
 
-interface Problem {
-  id: number;
-  title: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  acceptance: number;
-  solved: boolean;
-  premium: boolean;
-  category: string;
-}
+export default async function Problems() {
 
-export default function Problems() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const getProblems = await prisma.problem.findMany({})
 
-  const problems: Problem[] = [
-    {
-      id: 1,
-      title: "Binary Matrix Encryption",
+  const problems = 
+    getProblems.map((prob) => ({
+      id: prob.id,
+      title: prob.title,
       difficulty: "Easy",
       acceptance: 76.5,
-      solved: true,
+      solved: prob.solved,
       premium: false,
       category: "Arrays"
-    },
-    {
-      id: 2,
-      title: "Quantum State Optimizer",
-      difficulty: "Hard",
-      acceptance: 32.1,
-      solved: false,
-      premium: true,
-      category: "Dynamic Programming"
-    },
-    {
-      id: 3,
-      title: "Neural Network Pathfinder",
-      difficulty: "Medium",
-      acceptance: 45.8,
-      solved: false,
-      premium: false,
-      category: "Graphs"
-    },
-    {
-      id: 4,
-      title: "Cybernetic Array Rotation",
-      difficulty: "Easy",
-      acceptance: 82.3,
-      solved: true,
-      premium: false,
-      category: "Arrays"
-    },
-    {
-      id: 5,
-      title: "Digital Signal Processor",
-      difficulty: "Medium",
-      acceptance: 51.2,
-      solved: false,
-      premium: false,
-      category: "Bit Manipulation"
-    },
-  ];
+    }))
+  
+  
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -128,14 +85,14 @@ export default function Problems() {
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center space-x-2">
+                      <Link href={`/problems/${problem.id}`} className="flex items-center space-x-2">
                         <span className="text-gray-300 group-hover:text-indigo-400 transition">
                           {problem.title}
                         </span>
                         {problem.premium && (
                           <Lock className="w-4 h-4 text-yellow-400" />
                         )}
-                      </div>
+                      </Link>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`${getDifficultyColor(problem.difficulty)}`}>

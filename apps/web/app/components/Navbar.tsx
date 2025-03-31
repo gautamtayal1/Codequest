@@ -5,6 +5,7 @@ import { Button } from "./ui/button"
 
 import React from 'react';
 import { Code2, Terminal, Cpu, Network, User} from 'lucide-react';
+import Link from "next/link";
 
 export const Navbar = () => {
   const {data: session} = useSession()
@@ -12,6 +13,7 @@ export const Navbar = () => {
     <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-indigo-500/20 fixed w-full z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
+          <Link href="/">
           <div className="flex items-center space-x-2">
             <div className="relative">
               <Code2 className="h-8 w-8 text-indigo-400 glow-effect" />
@@ -23,11 +25,12 @@ export const Navbar = () => {
               CodeQuest
             </span>
           </div>
+          </Link>
           
           <div className="flex space-x-8">
             <button className="text-gray-300 hover:text-indigo-400 transition flex items-center space-x-1 relative group">
               <Terminal className="w-4 h-4" />
-              <span>Problems</span>
+              <Link href="/problems">Problems</Link>
               <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-400 group-hover:w-full transition-all duration-300"></div>
             </button>
             <button className="text-gray-300 hover:text-indigo-400 transition flex items-center space-x-1 relative group">

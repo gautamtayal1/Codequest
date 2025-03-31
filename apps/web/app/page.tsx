@@ -1,5 +1,6 @@
 import React from 'react';
 import { Brain, Zap, Trophy, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 
 function App() {
@@ -91,14 +92,14 @@ function App() {
               Join the elite ranks of developers who are pushing the boundaries of code.
               Your journey to technical mastery begins here.
             </p>
-            <button className="bg-indigo-500 text-white px-8 py-4 rounded-lg text-lg font-medium transition relative group inline-flex items-center space-x-2">
+            <Link href="/problems" className="bg-indigo-500 text-white px-8 py-4 rounded-lg text-lg font-medium transition relative group inline-flex items-center space-x-2">
               <span className="relative z-10">Enter the Matrix</span>
               <ArrowRight className="w-5 h-5 relative z-10" />
               <div className="absolute inset-0 bg-indigo-400 opacity-0 group-hover:opacity-20 rounded-lg blur-xl transition"></div>
               {/* Electric connection lines */}
               <div className="absolute -left-8 top-1/2 h-px w-6 bg-gradient-to-r from-transparent to-indigo-500/50 transform -translate-y-1/2 circuit-line"></div>
               <div className="absolute -right-8 top-1/2 h-px w-6 bg-gradient-to-l from-transparent to-indigo-500/50 transform -translate-y-1/2 circuit-line"></div>
-            </button>
+            </Link>
           </div>
         </div>
       </div>
