@@ -16,11 +16,8 @@ WORKDIR /app/apps/submission-webhook
 # Install dependencies using pnpm
 RUN pnpm install
 
-# Build the project (if necessary)
-RUN pnpm run build
-
 # Expose port (if your app runs on a specific port, e.g., 3000 for Express)
-EXPOSE 3000
+EXPOSE 8080
 
 # Command to run the application
 CMD ["pnpm", "start"]
