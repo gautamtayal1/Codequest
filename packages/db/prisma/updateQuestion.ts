@@ -13,9 +13,9 @@ export const LANGUAGE_MAPPING : {
   cpp: {judge0: 54, internal: 2, name: "C++", monaco: "cpp"}
 }
 
-async function main(problemSlug: string, problemTitle: string) {
+async function main(problemSlug: string) {
   const absolutePath = `/Users/apple/Desktop/my_projects/leetcode/apps/problems/${problemSlug}`
-  const problemStatement = await fs.readFile(`${absolutePath}//Problem.md`, "utf8")
+  const problemStatement = await fs.readFile(`${absolutePath}/Problem.md`, "utf8")
 
   const problem = await prisma.problem.upsert({
     where: { slug: problemSlug },
@@ -53,4 +53,4 @@ async function main(problemSlug: string, problemTitle: string) {
   )
 }
 
-main(process.env.PROBLEM_SLUG!, process.env.PROBLEM_TITLE!)
+main(process.env.PROBLEM_SLUG!)
