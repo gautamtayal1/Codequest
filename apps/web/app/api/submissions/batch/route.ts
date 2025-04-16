@@ -25,8 +25,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({message: "please login to continue"}, 
       {status: 401})
     }
-
-
     const dbUser = await prisma.user.findUnique({
       where: { email: user.email ?? "" }
     });

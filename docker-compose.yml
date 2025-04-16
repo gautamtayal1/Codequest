@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: judge0-postgres
+    restart: always
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=judge0
+      - POSTGRES_DB=judge0
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  judge0-core: 
+    image: judge0/judge0:latest
+    platform: linux/amd64    
+    container_name: judge0-core
+    ports:
+      - "2358:2358"
+    environment:
+      - PORT=2358
+      - REDIS_HOST=judge0-redis
+      - ENABLE_AUTH=false
+      - CALLBACK_URL=http://submission-webhook:8080/submission-callback
+      - DATABASE_URL=postgresql://judge0:judge0@postgres:5432/judge0
+    depends_on:
+      - judge0-redis
+      - submission-webhook
+
+  judge0-redis:
+    image: redis:6
+    container_name: judge0-redis
+    restart: always
+
+  submission-webhook:
+    build: 
+      context: .
+      dockerfile: apps/submission-webhook/Dockerfile
+    container_name: submission-webhook
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgresql://judge0:judge0@postgres:5432/judge0
+    depends_on:
+      - postgres
+
+volumes:
+  pg_data:
