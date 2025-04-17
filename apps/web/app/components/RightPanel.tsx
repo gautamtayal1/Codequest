@@ -6,16 +6,12 @@ import MonacoEditor from "./MonacoEditor";
 import { useRef, useState } from "react";
 import axios from "axios";
 
-// Define an extended Problem type that includes defaultCode
-type ProblemWithDefaultCode = Problem & {
-  defaultCode: Array<{
-    languageId: number;
-    code: string;
-  }>;
-};
 
-export default function RightPanel({problem}: {problem: ProblemWithDefaultCode}) {
+export default function RightPanel({problem}: {problem: Problem}) {
   const [language, setLanguage] = useState("Javascript")
+  const [status1, setStatus1] = useState("")
+  const [status2, setStatus2] = useState("")
+
   console.log(problem)
   const editorRef = useRef<any>(null)
 
@@ -27,15 +23,37 @@ export default function RightPanel({problem}: {problem: ProblemWithDefaultCode})
 
   const submitRequest = async(code: string) => {
     try {
-      const req = await axios.post(`/api/submissions/batch`, {
+      console.log("submit req")
+      const res = await axios.post(`/api/submissions/batch`, {
         code: code,
         languageId: language === "Javascript" ? "js" : "cpp",
         problemId: problem.id
       })
-      console.log(req)
+      const submission = res.data.submissions
+      setStatus1("RUNNING")
+      setStatus2("RUNNING")
+      getStatus(submission.id)
     } catch (error) {
       console.error("Error submitting code:", error)
     }
+  }
+
+  const getStatus = (submissionId: string) => {
+    const interval = setInterval(async() => {
+      const response = await axios.post("/api/submissions/status", {
+        submissionId: submissionId
+      }, {
+        withCredentials: true
+      })
+      const submission = response.data.submission 
+      console.log(submission)
+
+      if(submission.status !== "PENDING"){
+        setStatus1(submission.testCases[0].status)
+        setStatus2(submission.testCases[1].status)
+        clearInterval(interval)
+      }
+    }, 1000);
   }
 
   const getDefaultCode = () => {
@@ -90,7 +108,31 @@ export default function RightPanel({problem}: {problem: ProblemWithDefaultCode})
               <span className="text-gray-300 font-medium">Console Output</span>
             </div>
             <pre className="text-gray-300 font-mono text-sm">
-              Your code output will appear here
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-indigo-500/20">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-gray-300">Test Case 1</span>
+                  {status1 && (
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-2 h-2 rounded-full ${status1 === 'RUNNING' ? 'bg-yellow-500 animate-pulse' : status1 === 'FAIL' ? 'bg-red-500' : 'bg-green-500'}`}></div>
+                      <span className="text-gray-400 text-sm">{status1 === 'RUNNING' ? 'Running' : status1 === 'FAIL' ? 'Failed' : 'Accepted'}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-indigo-500/20">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-gray-300">Test Case 2</span>
+                  {status2 && (
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-2 h-2 rounded-full ${status2 === 'RUNNING' ? 'bg-yellow-500 animate-pulse' : status2 === 'FAIL' ? 'bg-red-500' : 'bg-green-500'}`}></div>
+                      <span className="text-gray-400 text-sm">{status2 === 'RUNNING' ? 'Running' : status2 === 'FAIL' ? 'Failed' : 'Accepted'}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
             </pre>
           </div>
         </div>

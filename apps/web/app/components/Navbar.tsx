@@ -27,22 +27,14 @@ export const Navbar = () => {
           </div>
           </Link>
           
-          <div className="flex space-x-8">
-            <button className="text-gray-300 hover:text-indigo-400 transition flex items-center space-x-1 relative group">
-              <Terminal className="w-4 h-4" />
-              <Link href="/problems">Problems</Link>
-              <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-400 group-hover:w-full transition-all duration-300"></div>
-            </button>
-            <button className="text-gray-300 hover:text-indigo-400 transition flex items-center space-x-1 relative group">
-              <Cpu className="w-4 h-4" />
-              <span>Contest</span>
-              <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-400 group-hover:w-full transition-all duration-300"></div>
-            </button>
-            <button className="text-gray-300 hover:text-indigo-400 transition flex items-center space-x-1 relative group">
-              <Network className="w-4 h-4" />
-              <span>Leaderboard</span>
-              <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-400 group-hover:w-full transition-all duration-300"></div>
-            </button>
+          <div>
+            <div className="group relative">
+              <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
+              <Link href="/problems" className="relative flex items-center space-x-2 bg-gray-800/50 px-4 py-2 rounded-lg border border-indigo-500/20 hover:bg-gray-700/50 transition-all duration-300">
+                <Terminal className="w-4 h-4 text-indigo-400 group-hover:scale-110 transition-transform" />
+                <span className="text-gray-300 group-hover:text-indigo-400 transition-colors">Start Coding</span>
+              </Link>
+            </div>
             
           </div>
 

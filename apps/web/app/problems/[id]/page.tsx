@@ -6,14 +6,13 @@ import remarkGfm from 'remark-gfm';
 import RightPanel from '@/components/RightPanel';
 
 export default async function ProblemSolving({params}: {params: {id: string}}) {
-  const id = await params.id
+  const {id} = await params
   const problem = await prisma.problem.findUnique({
     where: {id},
     include: {
       defaultCode: true
       }
   })
-  const defaultCode = problem?.defaultCode[0]?.code || '// Write your code here'
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-950 to-purple-950 pt-20">

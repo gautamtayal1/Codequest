@@ -48,14 +48,6 @@ export async function POST(req: NextRequest) {
       code
     )
 
-    console.log("code sent: " + updatedCode)
-    console.log("judge0: " + LANGUAGE_MAPPING[languageId]?.judge0)
-    console.log("inputs: " + problem.inputs[0])
-    console.log("outputs: " + problem.outputs[0])
-    console.log("inputs: " + problem.inputs[1])
-    console.log("outputs: " + problem.outputs[1])
-    
-
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_JUDGE0_SERVER}/submissions/batch`, {
         submissions: problem.inputs.map((input, index) => ({
