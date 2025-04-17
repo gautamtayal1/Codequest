@@ -1,12 +1,16 @@
 import React from 'react';
-import ProblemTab from '@/components/ProblemTab';
 import prisma from '@repo/db/config';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import RightPanel from '@/components/RightPanel';
 
-export default async function ProblemSolving({params}: {params: {id: string}}) {
-  const {id} = await params
+
+export default async function ProblemSolving({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params;
   const problem = await prisma.problem.findUnique({
     where: {id},
     include: {

@@ -3,6 +3,7 @@ import { Star, BarChart2, Clock, CheckCircle2, AlertCircle, Lock } from 'lucide-
 import prisma from '@repo/db/config';
 import Link from 'next/link';
 
+export const dynamic = "force-dynamic"
 
 export default async function Problems() {
 

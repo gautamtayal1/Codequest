@@ -36,8 +36,6 @@ async function generateBoilerplate(problemPath: string) {
   const basePath = path.resolve(__dirname, problemPath);
   const structurePath = path.join(basePath, "Structure.md");
   
-  console.log("Looking for Structure.md at:", structurePath);
-  
   try {
     const { functionName, inputType, outputType, outputName } = await readStructure(structurePath);
 
@@ -50,7 +48,6 @@ async function generateBoilerplate(problemPath: string) {
     const cppCode = `#include <vector>\n${outputType} ${functionName}(std::vector<${outputType}> list) {\n  // Your code here\n  return ${outputName};\n}`;
     await fs.writeFile(path.join(boilerplateDir, "function.cpp"), cppCode);
 
-    console.log("Generated boilerplate files in", boilerplateDir);
   } catch (err) {
     console.error("Error reading Structure.md:", err);
     throw err;

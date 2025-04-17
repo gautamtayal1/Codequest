@@ -6,10 +6,8 @@ app.use(express.json())
 
 //@ts-ignore
 app.put("/submission-callback", async (req: express.Request, res: express.Response) => {
-  console.log("submission-callback executed")
   try {
     const data = req.body;
-    console.log(data)
   const testCase = await prisma.testCase.update({
     where: {
       judge0TrackingId: data.token
@@ -18,7 +16,6 @@ app.put("/submission-callback", async (req: express.Request, res: express.Respon
       status: getStatus(data.status.description)
     }
   });
-  console.log(testCase)
   if(!testCase) {
     return res.status(404).json({
       message: "Testcase not found"
@@ -30,7 +27,6 @@ app.put("/submission-callback", async (req: express.Request, res: express.Respon
       submissionId: testCase.submissionId
     }
   })
-  console.log(allTestCases)
   const pendingTestCases = allTestCases.filter((test) => test.status === "PENDING")
   const failedTestCases = allTestCases.filter((test) => test.status !== "AC")
 
@@ -50,7 +46,6 @@ app.put("/submission-callback", async (req: express.Request, res: express.Respon
     }
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.log(error)
     return res.status(500).json({ success: false });
   }
 })
@@ -75,4 +70,3 @@ function getStatus(status: string) {
       return "PENDING";
   }
 }
-// function getStatus(status: string) {

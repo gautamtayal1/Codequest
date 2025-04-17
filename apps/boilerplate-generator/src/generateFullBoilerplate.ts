@@ -73,7 +73,6 @@ export default async function generateFullBoilerplate() {
           await generateJSBoilerplate(functionName, inputTypes, outputName, problemPath);
           await generateCppBoilerplate(functionName, inputTypes, outputType, outputName, problemPath);
 
-          console.log(`Generated boilerplate for ${folder.name}`);
         } catch (err) {
           console.error(`Error in ${folder.name}:`, err);
         }

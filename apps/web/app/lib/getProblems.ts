@@ -1,6 +1,6 @@
 import fs from "fs/promises"
 
-export const LANGUAGE_MAPPING : {
+const LANGUAGE_MAPPING : {
   [key: string]: {
     judge0: number;
     internal: number;

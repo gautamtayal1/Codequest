@@ -4,7 +4,7 @@ import prisma from "@repo/db/config"
 import { getProblems } from "@/lib/getProblems"
 import axios from "axios"
 
-export const LANGUAGE_MAPPING : {
+const LANGUAGE_MAPPING : {
   [key: string]: {
     judge0: number;
     internal: number;

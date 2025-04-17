@@ -22,18 +22,15 @@ export default function RightPanel({problem}: {problem: ProblemWithDefaultCode})
   const [status1, setStatus1] = useState("")
   const [status2, setStatus2] = useState("")
 
-  console.log(problem)
   const editorRef = useRef<any>(null)
 
   const handleSubmit = () => {
     const code = editorRef.current?.getCode()
-    console.log("Submitted Code:", code);
     submitRequest(code)
   }
 
   const submitRequest = async(code: string) => {
     try {
-      console.log("submit req")
       const res = await axios.post(`/api/submissions/batch`, {
         code: code,
         languageId: language === "Javascript" ? "js" : "cpp",
@@ -56,7 +53,6 @@ export default function RightPanel({problem}: {problem: ProblemWithDefaultCode})
         withCredentials: true
       })
       const submission = response.data.submission 
-      console.log(submission)
 
       if(submission.status !== "PENDING"){
         setStatus1(submission.testCases[0].status)

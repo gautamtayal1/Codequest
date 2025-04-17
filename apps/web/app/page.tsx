@@ -2,7 +2,6 @@ import React from 'react';
 import { Brain, Zap, Trophy, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
-
 function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-950 to-purple-950 circuit-pattern relative overflow-hidden">

@@ -1,4 +1,4 @@
-import { authOptions } from '@/api/auth/[...nextauth]/route';
+import { authOptions } from '../lib/auth';
 import prisma from '@repo/db/config';
 import { getServerSession } from 'next-auth';
 import Link from 'next/link';
@@ -22,7 +22,6 @@ const SubmissionsPage = async() => {
       }
     }
   })
-  console.log(user)
   const submissions = user?.submissions
 
   return (

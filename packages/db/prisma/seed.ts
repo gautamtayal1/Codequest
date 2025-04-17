@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import prisma from "../src/index.js";
 
 async function main() {
@@ -19,10 +20,7 @@ async function main() {
       create: language,
       update: {},
     });
-    console.log(`Seeded language: ${language.name}`);
   }
-  
-  console.log('Seeding completed!');
 }
 
 main()

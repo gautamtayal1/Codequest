@@ -1,7 +1,7 @@
 import { User, getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "./auth";
 
-export const session = async({session, token}: any) => {
+export const session = async({session, token}: {session: any, token: any}) => {
   session.user.id = token.id
   return session
 }
