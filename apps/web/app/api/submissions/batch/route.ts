@@ -20,7 +20,6 @@ export async function POST(req: NextRequest) {
   try {
     const {code, languageId, problemId} = await req.json()
     const user = await getUserSession()
-    console.log(user)
     if(!user) {
       return NextResponse.json({message: "please login to continue"}, 
       {status: 401})
@@ -37,16 +36,11 @@ export async function POST(req: NextRequest) {
     })
     if (!dbProblem) {
       return NextResponse.json({message: 'problem not found'}, {status:404})
-    } else {
-      console.log("check1")
-    }
-    console.log(dbProblem.slug)
+      }
     const problem = await getProblems(
       dbProblem.slug,
       languageId
     )
-    console.log(problem)
-    console.log("check2")
     const fullBoilerplateBuffer = await problem.fullBoilerplateCode
     const fullBoilerplateString = fullBoilerplateBuffer.toString()
     const updatedCode = fullBoilerplateString.replace(
@@ -54,7 +48,13 @@ export async function POST(req: NextRequest) {
       code
     )
 
-    console.log(updatedCode)
+    console.log("code sent: " + updatedCode)
+    console.log("judge0: " + LANGUAGE_MAPPING[languageId]?.judge0)
+    console.log("inputs: " + problem.inputs[0])
+    console.log("outputs: " + problem.outputs[0])
+    console.log("inputs: " + problem.inputs[1])
+    console.log("outputs: " + problem.outputs[1])
+    
 
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_JUDGE0_SERVER}/submissions/batch`, {
@@ -63,11 +63,10 @@ export async function POST(req: NextRequest) {
           source_code: updatedCode,
           stdin: input,
           expected_output: problem.outputs[index],
-          callback_url: process.env.JUDGE0_CALLBACK_URL ?? "http://51.21.152.82:8080/submission-callback"
+          callback_url: process.env.JUDGE0_CALLBACK_URL ?? "https://c887-2401-4900-a201-e63b-c0fd-fa17-8e49-6bc5.ngrok-free.app/submission-callback"
         }))
       }
     )
-    console.log("check3")
 
     const submission = await prisma.submission.create({
       data: {
@@ -78,7 +77,6 @@ export async function POST(req: NextRequest) {
         fullCode: updatedCode,
       }
     })
-    console.log("check4")
     const testCase = await Promise.all(
       response.data.map(async(SubmissionResult: any) => {
         const testCase = await prisma.testCase.create({

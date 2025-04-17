@@ -1,5 +1,4 @@
-#include <vector>
 int sumTwo(std::vector<int> list) {
-  // Your code here
+  // User's code goes here
   return result;
 }

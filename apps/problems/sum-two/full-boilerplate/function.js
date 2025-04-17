@@ -1,6 +1,5 @@
 // ##USER_CODE_HERE##
 
-const input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split('\n').join(' ').split(' ');
-const param0 = input.shift();
-const result = sumTwo(param0);
+const input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split(/\s+/).map(Number).slice(1);
+const result = sumTwo(input);
 console.log(result);

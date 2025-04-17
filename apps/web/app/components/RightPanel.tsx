@@ -6,8 +6,15 @@ import MonacoEditor from "./MonacoEditor";
 import { useRef, useState } from "react";
 import axios from "axios";
 
+// Define an extended Problem type that includes defaultCode
+type ProblemWithDefaultCode = Problem & {
+  defaultCode: Array<{
+    languageId: number;
+    code: string;
+  }>;
+};
 
-export default function RightPanel({problem}: {problem: Problem}) {
+export default function RightPanel({problem}: {problem: ProblemWithDefaultCode}) {
   const [language, setLanguage] = useState("Javascript")
   console.log(problem)
   const editorRef = useRef<any>(null)
@@ -31,6 +38,12 @@ export default function RightPanel({problem}: {problem: Problem}) {
     }
   }
 
+  const getDefaultCode = () => {
+    return language === "Javascript" ? 
+      problem.defaultCode.find((code: {languageId: number, code: string}) => code.languageId === 1)?.code : 
+      problem.defaultCode.find((code: {languageId: number, code: string}) => code.languageId === 2)?.code
+  }
+
   return (
     <div className="space-y-6">
       {/* Language Selector */}
@@ -51,7 +64,7 @@ export default function RightPanel({problem}: {problem: Problem}) {
             <div className="absolute inset-0 flex items-center justify-center text-gray-500" >
             <MonacoEditor 
             ref={editorRef}
-              defaultCode={language === "Javascript" ? problem?.defaultCode?.[1]?.code : problem?.defaultCode?.[0].code}
+              defaultCode={getDefaultCode()}
               language={language === "Javascript" ? "javascript" : "cpp"} 
             />
             </div>
