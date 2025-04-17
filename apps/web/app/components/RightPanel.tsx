@@ -6,8 +6,18 @@ import MonacoEditor from "./MonacoEditor";
 import { useRef, useState } from "react";
 import axios from "axios";
 
+type ProblemWithDefaultCode = Problem & {
+  defaultCode: Array<{
+    languageId: number;
+    code: string;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    problemId: string;
+  }>;
+};
 
-export default function RightPanel({problem}: {problem: Problem}) {
+export default function RightPanel({problem}: {problem: ProblemWithDefaultCode}) {
   const [language, setLanguage] = useState("Javascript")
   const [status1, setStatus1] = useState("")
   const [status2, setStatus2] = useState("")
@@ -58,8 +68,8 @@ export default function RightPanel({problem}: {problem: Problem}) {
 
   const getDefaultCode = () => {
     return language === "Javascript" ? 
-      problem.defaultCode.find((code: {languageId: number, code: string}) => code.languageId === 1)?.code : 
-      problem.defaultCode.find((code: {languageId: number, code: string}) => code.languageId === 2)?.code
+      problem.defaultCode.find((code) => code.languageId === 1)?.code || '' : 
+      problem.defaultCode.find((code) => code.languageId === 2)?.code || ''
   }
 
   return (

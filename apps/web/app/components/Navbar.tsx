@@ -4,7 +4,7 @@ import { signIn, signOut, useSession } from "next-auth/react"
 import { Button } from "./ui/button"
 
 import React from 'react';
-import { Code2, Terminal, Cpu, Network, User} from 'lucide-react';
+import { Code2, Terminal, User} from 'lucide-react';
 import Link from "next/link";
 
 export const Navbar = () => {
@@ -28,12 +28,22 @@ export const Navbar = () => {
           </Link>
           
           <div>
-            <div className="group relative">
-              <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
-              <Link href="/problems" className="relative flex items-center space-x-2 bg-gray-800/50 px-4 py-2 rounded-lg border border-indigo-500/20 hover:bg-gray-700/50 transition-all duration-300">
-                <Terminal className="w-4 h-4 text-indigo-400 group-hover:scale-110 transition-transform" />
-                <span className="text-gray-300 group-hover:text-indigo-400 transition-colors">Start Coding</span>
-              </Link>
+            <div className="flex items-center space-x-4">
+              <div className="group relative">
+                <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
+                <Link href="/problems" className="relative flex items-center space-x-2 bg-gray-800/50 px-4 py-2 rounded-lg border border-indigo-500/20 hover:bg-gray-700/50 transition-all duration-300">
+                  <Terminal className="w-4 h-4 text-indigo-400 group-hover:scale-110 transition-transform" />
+                  <span className="text-gray-300 group-hover:text-indigo-400 transition-colors">Problems</span>
+                </Link>
+              </div>
+
+              <div className="group relative">
+                <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
+                <Link href="/submissions" className="relative flex items-center space-x-2 bg-gray-800/50 px-4 py-2 rounded-lg border border-indigo-500/20 hover:bg-gray-700/50 transition-all duration-300">
+                  <Code2 className="w-4 h-4 text-indigo-400 group-hover:scale-110 transition-transform" />
+                  <span className="text-gray-300 group-hover:text-indigo-400 transition-colors">Submissions</span>
+                </Link>
+              </div>
             </div>
             
           </div>

@@ -31,7 +31,13 @@ export default async function ProblemSolving({params}: {params: {id: string}}) {
         {/* Left Panel */}
         <div className="space-y-6">
           {/* Tabs */}
-          <ProblemTab />
+          <div className="flex border-b border-indigo-500/20">
+      <button
+        className={`px-6 py-3 text-sm font-medium transition text-indigo-400 border-b-2 border-indigo-400`}
+      >
+        Description
+      </button>
+    </div>
 
           {/* Description Content */}
           <div className="bg-gray-900/40 backdrop-blur-xl rounded-xl border border-indigo-500/20 text-white prose lg:prose-xl my-5 p-6">
@@ -66,7 +72,7 @@ export default async function ProblemSolving({params}: {params: {id: string}}) {
         </div>
 
         {/* Right Panel - Code Editor Container */}
-        <RightPanel problem={problem}/>
+        {problem && <RightPanel problem={problem}/>}
       </div>
     </div>
   );

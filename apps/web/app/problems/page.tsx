@@ -19,8 +19,6 @@ export default async function Problems() {
       category: "Arrays"
     }))
   
-  
-
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'Easy':
