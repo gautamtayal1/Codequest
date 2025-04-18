@@ -1,20 +1,14 @@
 import fs from "fs/promises"
+import path from "path"
 
-const LANGUAGE_MAPPING : {
-  [key: string]: {
-    judge0: number;
-    internal: number;
-    name: string;
-    monaco: string
-  }
-} = {
-  js: {judge0: 63, internal: 1, name: "Javascript", monaco: "javascript"},
-  cpp: {judge0: 54, internal: 2, name: "C++", monaco: "cpp"}
-}
-const basePath = `/Users/apple/Desktop/my_projects/leetcode/apps`
+const basePath = "/app/apps/problems"
+
 
 export async function getProblems(slug: string, languageId: string) {
-  const fullBoilerplateCode = fs.readFile(`${basePath}/problems/${slug}/full-boilerplate/function.${languageId}`)
+  const fullBoilerplateCode = fs.readFile(
+    path.join(basePath, slug, "full-boilerplate", `function.${languageId}`),
+    "utf-8"
+  )
 
   const inputs = await getInputs(slug)
   const outputs = await getOutputs(slug)
@@ -22,24 +16,18 @@ export async function getProblems(slug: string, languageId: string) {
   return {
     inputs,
     outputs,
-    fullBoilerplateCode
+    fullBoilerplateCode,
   }
 }
 
-async function getInputs(slug: string) : Promise<string[]> {
-  const path = `${basePath}/problems/${slug}/tests/inputs`
-  const inputsFolder = fs.readdir(path)
-  const inputs = await Promise.all((await inputsFolder).map(async(file) => {
-    return await fs.readFile(`${path}/${file}`, "utf-8")
-  }))
-  return inputs
+async function getInputs(slug: string): Promise<string[]> {
+  const dir = path.join(basePath, slug, "tests", "inputs")
+  const files = await fs.readdir(dir)
+  return Promise.all(files.map((file) => fs.readFile(path.join(dir, file), "utf-8")))
 }
 
-async function getOutputs(slug: string) : Promise<string[]> {
-  const path = `${basePath}/problems/${slug}/tests/outputs`
-  const outputsFolder = fs.readdir(path)
-  const outputs = await Promise.all((await outputsFolder).map(async(file) => {
-    return await fs.readFile(`${path}/${file}`, "utf-8")
-  }))
-  return outputs
+async function getOutputs(slug: string): Promise<string[]> {
+  const dir = path.join(basePath, slug, "tests", "outputs")
+  const files = await fs.readdir(dir)
+  return Promise.all(files.map((file) => fs.readFile(path.join(dir, file), "utf-8")))
 }
