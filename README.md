@@ -95,7 +95,3 @@ Postgres container.
 - **Prisma** – typed ORM & migrations
 - **Tailwind CSS** – utility-first styling
 - **ESLint + Prettier** – code quality
-
----
-
-Made with ❤️ by the Codequest team.
