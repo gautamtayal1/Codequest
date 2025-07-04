@@ -2,6 +2,12 @@ import { authOptions } from '../lib/auth';
 import prisma from '@repo/db/config';
 import { getServerSession } from 'next-auth';
 import Link from 'next/link';
+import type { Submission, TestCase, Problem } from '@prisma/client';
+
+type SubmissionWithRelations = Submission & {
+  testCases: TestCase[];
+  problem: Problem;
+};
 
 const SubmissionsPage = async() => {
 
@@ -41,7 +47,7 @@ const SubmissionsPage = async() => {
 
           <div className="space-y-6 mt-6 flex flex-col gap-2">
             {submissions && submissions.length > 0 ? (
-              submissions.map((submission) => (
+              submissions.map((submission: SubmissionWithRelations) => (
                 <Link href={`/problems/${submission.problem.id}`} key={submission.id}>
                   <div
                     key={submission.id}
@@ -82,7 +88,7 @@ const SubmissionsPage = async() => {
 
                         <div className="bg-black/40 p-4 rounded-md border border-indigo-500/20">
                           <div className="text-sm text-gray-400 mb-1">Test Cases Passed</div>
-                          <div className="font-medium text-gray-100">{(submission.testCases.filter((test) => test.status === "AC").length) + "/2"}</div>
+                          <div className="font-medium text-gray-100">{(submission.testCases.filter((test: TestCase) => test.status === "AC").length) + "/2"}</div>
                         </div>
 
                         <div className="bg-black/40 p-4 rounded-md border border-indigo-500/20">

@@ -2,15 +2,26 @@ import React from 'react';
 import { Star, BarChart2, Clock, CheckCircle2, AlertCircle, Lock } from 'lucide-react';
 import prisma from '@repo/db/config';
 import Link from 'next/link';
+import type { Problem } from '@prisma/client';
 
 export const dynamic = "force-dynamic"
+
+interface ProblemWithExtras {
+  id: string;
+  title: string;
+  difficulty: string;
+  acceptance: number;
+  solved: number;
+  premium: boolean;
+  category: string;
+}
 
 export default async function Problems() {
 
   const getProblems = await prisma.problem.findMany({})
 
-  const problems = 
-    getProblems.map((prob) => ({
+  const problems: ProblemWithExtras[] = 
+    getProblems.map((prob: Problem) => ({
       id: prob.id,
       title: prob.title,
       difficulty: "Easy",
@@ -71,7 +82,7 @@ export default async function Problems() {
                 </tr>
               </thead>
               <tbody>
-                {problems.map((problem) => (
+                {problems.map((problem: ProblemWithExtras) => (
                   <tr
                     key={problem.id}
                     className="border-b border-indigo-500/10 hover:bg-indigo-500/5 transition cursor-pointer group"

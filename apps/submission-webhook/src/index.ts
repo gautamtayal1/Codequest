@@ -27,8 +27,8 @@ app.put("/submission-callback", async (req: express.Request, res: express.Respon
       submissionId: testCase.submissionId
     }
   })
-  const pendingTestCases = allTestCases.filter((test) => test.status === "PENDING")
-  const failedTestCases = allTestCases.filter((test) => test.status !== "AC")
+  const pendingTestCases = allTestCases.filter((test: any) => test.status === "PENDING")
+  const failedTestCases = allTestCases.filter((test: any) => test.status !== "AC")
 
   if(pendingTestCases.length === 0) {
     const accepted = failedTestCases.length === 0

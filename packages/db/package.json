@@ -3,14 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
-    "./config": "./dist/index.js"
+    "./config": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^22.13.10",
     "ts-node": "^10.9.2",
-    "tsx": "link:tsx"
+    "typescript": "5.8.2"
   },
   "scripts": {
     "dev": "tsx src/index.ts",
@@ -24,7 +30,6 @@
   "dependencies": {
     "@prisma/client": "6.5.0",
     "prisma": "^6.5.0",
-    "tsx": "link:tsx",
     "@repo/typescript-config": "workspace:*"
   }
 }
