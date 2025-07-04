@@ -1,84 +1,101 @@
-# Turborepo starter
+# Codequest
 
-This Turborepo starter is maintained by the Turborepo core team.
+Codequest is a self-hosted coding-practice platform that lets you browse
+algorithm problems, write code directly in the browser, and have your
+solution evaluated automatically with the Judge0 API. The project is
+organised as a **Turborepo** monorepo powered by **pnpm** workspaces.
 
-## Using this example
+## Features
 
-Run the following command:
+- 🖥 Modern **Next.js 15** web interface with Monaco code editor
+- 🔐 Google OAuth login via **NextAuth**
+- ⚙️ Automatic boilerplate/starter-code generation for every problem
+- 🗄️ **Prisma + PostgreSQL** persistence layer
+- 🛰️ Real-time submission status updates through an Express webhook
+- ♻️ Shared React UI library and internal ESLint/TS configs
 
-```sh
-npx create-turbo@latest
-```
-
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+## Repository layout
 
 ```
-cd my-turborepo
-pnpm build
+apps/
+  web/                    – Next.js front-end (port 3000)
+  submission-webhook/     – Express service receiving Judge0 callbacks (8080)
+  boilerplate-generator/  – CLI that rebuilds problem boilerplates
+packages/
+  db/                     – Prisma schema & database client
+  ui/                     – Shared React UI primitives (Tailwind + Radix UI)
+  eslint-config/          – Internal ESLint presets
+  typescript-config/      – Reusable tsconfig bases
 ```
 
-### Develop
+## Prerequisites
 
-To develop all apps and packages, run the following command:
+1. Node ≥ 18
+2. pnpm ≥ 9 – `corepack enable && corepack prepare pnpm@latest --activate`
+3. Docker + Docker Compose (for PostgreSQL)
+4. Google OAuth 2 credentials (for sign-in)
 
-```
-cd my-turborepo
+## Quick start
+
+```bash
+# 1. Install dependencies
+git clone https://github.com/<you>/codequest.git
+cd codequest
+pnpm install
+
+# 2. Environment variables
+cp apps/web/env.example apps/web/.env
+# Edit the file and set the following
+# DATABASE_URL=postgresql://postgres:postgres@localhost:5440/postgres
+# NEXTAUTH_SECRET=<random-string>
+# GOOGLE_CLIENT_ID=<your-id>
+# GOOGLE_CLIENT_SECRET=<your-secret>
+
+# 3. Start Postgres (and keep it running in the background)
+docker compose up -d postgres
+
+# 4. Apply database migrations
+pnpm --filter @repo/db exec prisma migrate deploy
+
+# 5. Launch all dev servers
 pnpm dev
 ```
 
-### Remote Caching
+Open http://localhost:3000 to try it out.
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+`pnpm dev` triggers `turbo run dev`, which concurrently launches:
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+- `next dev` in `apps/web` (web UI)
+- `tsx` in `apps/submission-webhook` (submission callback API)
+- `tsx` in `apps/boilerplate-generator` (watches for problem changes)
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+## Production
 
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
+```bash
+docker compose up --build
 ```
 
-## Useful Links
+The compose file builds the web and webhook apps and wires them to the
+Postgres container.
 
-Learn more about the power of Turborepo:
+## Adding a new problem
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+1. Create a folder under `apps/problems/<my-problem>` containing:
+   - `Problem.md` – statement
+   - `Structure.md` – signature definition
+   - `tests/inputs/*.txt` and `tests/outputs/*.txt`
+2. Run `pnpm --filter boilerplate-generator dev` to generate
+   `boilerplate/` & `full-boilerplate/` starter code.
+3. Commit the changes – the web UI will automatically pick up the new
+   problem.
+
+## Tooling
+
+- **Turborepo** – task orchestration & caching
+- **Prisma** – typed ORM & migrations
+- **Tailwind CSS** – utility-first styling
+- **ESLint + Prettier** – code quality
+
+---
+
+Made with ❤️ by the Codequest team.
