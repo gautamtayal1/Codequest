@@ -1,4 +1,4 @@
-FROM node:20-alpine 
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -14,8 +14,10 @@ COPY . .
 RUN pnpm install --frozen-lockfile
 
 RUN pnpm --filter "@repo/db" run build \
-    && pnpm --filter "@repo/db" exec prisma generate \
-    && pnpm --filter "web" run build
+    && pnpm --filter "@repo/db" exec prisma generate
+
+RUN pnpm --filter "web" run build
+
 
 EXPOSE 3000
 
