@@ -48,16 +48,32 @@ export async function POST(req: NextRequest) {
       code
     )
 
+    const judge0Url = `${process.env.NEXT_PUBLIC_JUDGE0_SERVER}/submissions/batch`;
+
+    // Optional RapidAPI authentication
+    const rapidApiKey = process.env.JUDGE0_API_KEY;
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json"
+    };
+
+    if (rapidApiKey) {
+      const host = new URL(process.env.NEXT_PUBLIC_JUDGE0_SERVER ?? "").host;
+      headers["X-RapidAPI-Key"] = rapidApiKey;
+      headers["X-RapidAPI-Host"] = host;
+    }
+
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_JUDGE0_SERVER}/submissions/batch`, {
+      judge0Url,
+      {
         submissions: problem.inputs.map((input, index) => ({
           language_id: LANGUAGE_MAPPING[languageId]?.judge0,
           source_code: updatedCode,
           stdin: input,
           expected_output: problem.outputs[index],
-          callback_url: process.env.JUDGE0_CALLBACK_URL ?? "https://c887-2401-4900-a201-e63b-c0fd-fa17-8e49-6bc5.ngrok-free.app/submission-callback"
+          callback_url: process.env.JUDGE0_CALLBACK_URL ?? ""
         }))
-      }
+      },
+      { headers }
     )
 
     const submission = await prisma.submission.create({
