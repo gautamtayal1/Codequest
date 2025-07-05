@@ -5,12 +5,18 @@ services:
       - 5440:5432
     env_file:
       - .env
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-postgres}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   web:
     build:
@@ -24,13 +30,6 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres
-      - NEXTAUTH_SECRET=your-secret-key-change-in-production
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - NEXT_PUBLIC_JUDGE0_SERVER=${NEXT_PUBLIC_JUDGE0_SERVER:-https://judge0-ce.p.rapidapi.com}
-      - JUDGE0_CALLBACK_URL=http://submission-webhook:8080/submission-callback
 
   submission-webhook:
     build:
@@ -42,8 +41,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres
 
 volumes:
   postgres_data:
